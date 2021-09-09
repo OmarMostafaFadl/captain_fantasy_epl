@@ -1,9 +1,10 @@
+from abc import abstractproperty
+import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys      #Allows us to use Enter, ESC, Space...
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys      #Allows us to use Enter, ESC, Space...
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
 
 class FantasyEPL():
@@ -17,7 +18,7 @@ class FantasyEPL():
     PLAYER_X_BUTTON = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[1]/div[2]/button")
     NEXT_PAGE_STATS = (By.XPATH, "//*[@id='root']/div[2]/div/div[1]/div[3]/button[3]")
     LAST_PAGE_STATS = (By.XPATH, "//*[@id='root']/div[2]/div/div[1]/div[3]/button[2]")
-
+    
 
     def __init__(self):
         self.driver = webdriver.Chrome(self.PATH)
@@ -42,13 +43,70 @@ class FantasyEPL():
         PLAYER = (By.XPATH, "//*[@id='root']/div[2]/div/div[1]/table/tbody/tr["+ str(player_row) +"]/td[1]/button")
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(PLAYER)).click()
 
+    def nav_player_stats(self, gameweeks):
+
+        all_stats = {"Player Name": [], "Player Position": [], "Gameweek": [], "Points":[], "Minutes Played": [], "Goals Scored": [], "Assists": [], "Clean Sheets": []
+                    , "Goals Conceded": [], "Own Goals": [], "Penalties Saved": [], "Penalties Missed": [], "Yellow Cards": [], "Red Cards": [], "Saves": []
+                    , "Bonus Points": [], "Bonus Points System": [], "Price": []}
+
+        GAMEWEEKS = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr[1]/td[1]")
+        WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(GAMEWEEKS))
+
+        player_name = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/h2").text
+        player_position = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/span").text
+
+        all_stats["Player Name"].append(player_name)
+        all_stats["Player Position"].append(player_position)
+
+        stats_string = "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr["
+
+        for gameweek in range(1, gameweeks + 1):
+
+            gw = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[1]").text
+            points = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[3]").text
+            minutes_played = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[4]").text
+            goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[5]").text
+            assists = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[6]").text
+            clean_sheets = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[7]").text
+            goals_conceded = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[8]").text
+            own_goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[9]").text
+            penalties_saved = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[10]").text
+            penalties_missed = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[11]").text
+            yellow_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[12]").text
+            red_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[13]").text
+            saves = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[14]").text
+            bonus = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[15]").text
+            bonus_point_system = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[16]").text
+            price = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[23]").text
+
+            all_stats["Gameweek"].append(gw)
+            all_stats["Minutes Played"].append(minutes_played)
+            all_stats["Points"].append(points)
+            all_stats["Goals Scored"].append(goals)
+            all_stats["Assists"].append(assists)
+            all_stats["Clean Sheets"].append(clean_sheets)
+            all_stats["Goals Conceded"].append(goals_conceded)
+            all_stats["Own Goals"].append(own_goals)
+            all_stats["Penalties Saved"].append(penalties_saved)
+            all_stats["Penalties Missed"].append(penalties_missed)
+            all_stats["Yellow Cards"].append(yellow_cards)
+            all_stats["Red Cards"].append(red_cards)
+            all_stats["Saves"].append(saves)
+            all_stats["Bonus Points"].append(bonus)
+            all_stats["Bonus Points System"].append(bonus_point_system)
+            all_stats["Price"].append(price)
+
+            print(gameweek)
+
+        print(all_stats)
+
     def exit_player(self):
 
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.PLAYER_X_BUTTON)).click()
 
     def nav_players(self):
 
-        player_rows = 31
+        player_rows = 5
 
         for player_row in range(1, player_rows):
 
@@ -80,16 +138,15 @@ if __name__ == "__main__":
     testf = FantasyEPL()
 
     testf.open_website()
-    
+
     time.sleep(1)
     testf.go_stats()
     time.sleep(1)
-    testf.nav_players()
-    time.sleep(1)
-    testf.next_page_stats()
-    time.sleep(1)
-    testf.nav_players()
-    time.sleep(1000)
+    testf.click_player(1)
+    testf.nav_player_stats(3)
+    time.sleep(5)
+    testf.quit_website()
+    
 
     
 
