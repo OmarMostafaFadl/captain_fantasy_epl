@@ -49,52 +49,106 @@ class FantasyEPL():
                      "Penalties Missed": [], "Yellow Cards": [], "Red Cards": [], "Saves": [], "Bonus Points": [], 
                      "Bonus Points System": [], "Price": []}
 
-        GAMEWEEKS = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr[1]/td[1]")
-        WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(GAMEWEEKS))
+        LOGO = (By.XPATH, "//*[@id='ism-dialog-title']/img")
+        WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(LOGO))
         #player_name = self.driver.find_element_by_xpath("//h2[@attribute=ElementDialog__ElementHeading-gmefnd-2 llwlWO]")
-        player_name = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/h2").text
-        player_position = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/span").text
+        try: 
+            player_name = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/h2").text
+            player_position = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/span").text
 
-        all_stats["Player Name"].append(player_name)
-        all_stats["Player Position"].append(player_position)
+            all_stats["Player Name"].append(player_name)
+            all_stats["Player Position"].append(player_position)
+        except:
+            player_name = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div[1]/div/div[1]/h2").text
+            player_position = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div[1]/div/div[1]/span").text
 
-        stats_string = "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr["
+            all_stats["Player Name"].append(player_name)
+            all_stats["Player Position"].append(player_position)
+        
 
         for gameweek in range(1, gameweeks + 1):
 
-            gw = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[1]").text
-            points = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[3]").text
-            minutes_played = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[4]").text
-            goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[5]").text
-            assists = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[6]").text
-            clean_sheets = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[7]").text
-            goals_conceded = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[8]").text
-            own_goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[9]").text
-            penalties_saved = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[10]").text
-            penalties_missed = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[11]").text
-            yellow_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[12]").text
-            red_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[13]").text
-            saves = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[14]").text
-            bonus = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[15]").text
-            bonus_point_system = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[16]").text
-            price = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[23]").text
+            try:
+                
+                check = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody")
+                WebDriverWait(self.driver, 2).until(EC.presence_of_all_elements_located(check))
 
-            all_stats["Gameweek"].append(gw)
-            all_stats["Minutes Played"].append(minutes_played)
-            all_stats["Points"].append(points)
-            all_stats["Goals Scored"].append(goals)
-            all_stats["Assists"].append(assists)
-            all_stats["Clean Sheets"].append(clean_sheets)
-            all_stats["Goals Conceded"].append(goals_conceded)
-            all_stats["Own Goals"].append(own_goals)
-            all_stats["Penalties Saved"].append(penalties_saved)
-            all_stats["Penalties Missed"].append(penalties_missed)
-            all_stats["Yellow Cards"].append(yellow_cards)
-            all_stats["Red Cards"].append(red_cards)
-            all_stats["Saves"].append(saves)
-            all_stats["Bonus Points"].append(bonus)
-            all_stats["Bonus Points System"].append(bonus_point_system)
-            all_stats["Price"].append(price)
+                stats_string = "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr["
+
+                gw = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[1]").text
+                points = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[3]").text
+                minutes_played = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[4]").text
+                goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[5]").text
+                assists = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[6]").text
+                clean_sheets = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[7]").text
+                goals_conceded = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[8]").text
+                own_goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[9]").text
+                penalties_saved = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[10]").text
+                penalties_missed = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[11]").text
+                yellow_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[12]").text
+                red_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[13]").text
+                saves = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[14]").text
+                bonus = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[15]").text
+                bonus_point_system = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[16]").text
+                price = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[23]").text
+
+                all_stats["Gameweek"].append(gw)
+                all_stats["Minutes Played"].append(minutes_played)
+                all_stats["Points"].append(points)
+                all_stats["Goals Scored"].append(goals)
+                all_stats["Assists"].append(assists)
+                all_stats["Clean Sheets"].append(clean_sheets)
+                all_stats["Goals Conceded"].append(goals_conceded)
+                all_stats["Own Goals"].append(own_goals)
+                all_stats["Penalties Saved"].append(penalties_saved)
+                all_stats["Penalties Missed"].append(penalties_missed)
+                all_stats["Yellow Cards"].append(yellow_cards)
+                all_stats["Red Cards"].append(red_cards)
+                all_stats["Saves"].append(saves)
+                all_stats["Bonus Points"].append(bonus)
+                all_stats["Bonus Points System"].append(bonus_point_system)
+                all_stats["Price"].append(price)
+            
+            except:
+                
+                check = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[2]/div[3]/div/div/div[1]/div/table/tbody")
+                WebDriverWait(self.driver, 2).until(EC.presence_of_all_elements_located(check))
+
+                stats_string = "//*[@id='root-dialog']/div/dialog/div/div[2]/div[3]/div/div/div[1]/div/table/tbody/tr["
+
+                gw = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[1]").text
+                points = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[3]").text
+                minutes_played = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[4]").text
+                goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[5]").text
+                assists = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[6]").text
+                clean_sheets = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[7]").text
+                goals_conceded = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[8]").text
+                own_goals = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[9]").text
+                penalties_saved = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[10]").text
+                penalties_missed = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[11]").text
+                yellow_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[12]").text
+                red_cards = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[13]").text
+                saves = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[14]").text
+                bonus = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[15]").text
+                bonus_point_system = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[16]").text
+                price = self.driver.find_element_by_xpath(stats_string + str(gameweek) +"]/td[23]").text
+
+                all_stats["Gameweek"].append(gw)
+                all_stats["Minutes Played"].append(minutes_played)
+                all_stats["Points"].append(points)
+                all_stats["Goals Scored"].append(goals)
+                all_stats["Assists"].append(assists)
+                all_stats["Clean Sheets"].append(clean_sheets)
+                all_stats["Goals Conceded"].append(goals_conceded)
+                all_stats["Own Goals"].append(own_goals)
+                all_stats["Penalties Saved"].append(penalties_saved)
+                all_stats["Penalties Missed"].append(penalties_missed)
+                all_stats["Yellow Cards"].append(yellow_cards)
+                all_stats["Red Cards"].append(red_cards)
+                all_stats["Saves"].append(saves)
+                all_stats["Bonus Points"].append(bonus)
+                all_stats["Bonus Points System"].append(bonus_point_system)
+                all_stats["Price"].append(price)
 
         return all_stats
 
