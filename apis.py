@@ -1,11 +1,10 @@
-from abc import abstractproperty
+import json
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys      #Allows us to use Enter, ESC, Space...
+from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 class FantasyEPL():
 
@@ -45,13 +44,14 @@ class FantasyEPL():
 
     def nav_player_stats(self, gameweeks):
 
-        all_stats = {"Player Name": [], "Player Position": [], "Gameweek": [], "Points":[], "Minutes Played": [], "Goals Scored": [], "Assists": [], "Clean Sheets": []
-                    , "Goals Conceded": [], "Own Goals": [], "Penalties Saved": [], "Penalties Missed": [], "Yellow Cards": [], "Red Cards": [], "Saves": []
-                    , "Bonus Points": [], "Bonus Points System": [], "Price": []}
+        all_stats = {"Player Name": [], "Player Position": [], "Gameweek": [], "Points":[], "Minutes Played": [], "Goals Scored": [], 
+                     "Assists": [], "Clean Sheets": [], "Goals Conceded": [], "Own Goals": [], "Penalties Saved": [], 
+                     "Penalties Missed": [], "Yellow Cards": [], "Red Cards": [], "Saves": [], "Bonus Points": [], 
+                     "Bonus Points System": [], "Price": []}
 
         GAMEWEEKS = (By.XPATH, "//*[@id='root-dialog']/div/dialog/div/div[2]/div[2]/div/div/div[1]/div/table/tbody/tr[1]/td[1]")
         WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(GAMEWEEKS))
-
+        #player_name = self.driver.find_element_by_xpath("//h2[@attribute=ElementDialog__ElementHeading-gmefnd-2 llwlWO]")
         player_name = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/h2").text
         player_position = self.driver.find_element_by_xpath("//*[@id='root-dialog']/div/dialog/div/div[2]/div[1]/div[1]/div/div[1]/span").text
 
@@ -96,24 +96,24 @@ class FantasyEPL():
             all_stats["Bonus Points System"].append(bonus_point_system)
             all_stats["Price"].append(price)
 
-            print(gameweek)
-
-        print(all_stats)
+        return all_stats
 
     def exit_player(self):
 
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.PLAYER_X_BUTTON)).click()
 
-    def nav_players(self):
+    def nav_players(self, number_of_players):
 
-        player_rows = 5
+        all_players_stats = []
 
-        for player_row in range(1, player_rows):
+        for player in range(1, number_of_players + 1):
 
-            self.click_player(player_row)
-            time.sleep(1)
+            self.click_player(player)
+            stats = self.nav_player_stats(gameweeks=3)
+            all_players_stats.append(stats)
             self.exit_player()
-            time.sleep(1)
+
+        return all_players_stats
 
     def next_page_stats(self):
 
@@ -131,24 +131,3 @@ class FantasyEPL():
 
     def quit_website(self):
         self.driver.quit()
-
-
-if __name__ == "__main__":
-
-    testf = FantasyEPL()
-
-    testf.open_website()
-
-    time.sleep(1)
-    testf.go_stats()
-    time.sleep(1)
-    testf.click_player(1)
-    testf.nav_player_stats(3)
-    time.sleep(5)
-    testf.quit_website()
-    
-
-    
-
-
-    
